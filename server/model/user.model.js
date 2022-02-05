@@ -32,7 +32,7 @@ const userSchema = new Schema({
     address: {
         type: String,
         required: true,
-        max: 40
+        max: 60
     },
     cuisine: {
         type: String,
