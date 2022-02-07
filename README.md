@@ -1,5 +1,5 @@
 # Homey 
-<img style="border-radius: 20px" align="right" width="130" height="130" src=./img/homey.jpg>
+<img style="border-radius: 20px" align="right" width="130" height="130" src="https://github.com/gerundel1/homey/blob/readme/img/homey.jpg">
 
 ## Why Homey?
 Homey is a platform designed for people to sell and buy homemade goods. It aims to replace social media platforms that do not provide comprehensive support to these individuals. 
