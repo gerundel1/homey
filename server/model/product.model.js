@@ -25,6 +25,7 @@ const productSchema = new Schema({
         required: true,
         max: 50
     },
+    images: [{type: String}],
     allergies: [{
         type: String
     }],
