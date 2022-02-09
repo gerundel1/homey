@@ -38,7 +38,7 @@ const createUser = async (req, res) => {
           );
           // save user token
           newUser.token = token;
-          res.status(201).json(user);
+          res.status(201).json(newUser);
         } catch(error) {
             res.status(400).json(`Error occurred when create user in the database: ${ error }`);
 

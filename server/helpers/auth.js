@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const config = process.env;
 
-//authorization middleware
+//authorization middleware; use it if you want to restrict the access to the route
 const verifyToken = (req, res, next) => {
   const token =
     req.body.token || req.query.token || req.headers["x-access-token"];
