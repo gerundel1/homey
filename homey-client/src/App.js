@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import Nav from "./Components/Nav/Nav.js";
+import HomePage from "./Components/HomePage/HomePage";
+import Register from "./Components/Register/Register";
+import Login from "./Components/Login/Login";
+import RegisterSuccess from "./Components/RegisterSuccess/RegisterSuccess";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <>
+            <Router>
+                <Nav />
+
+                <Switch>
+                    <Route exact path="/">
+                        <HomePage />
+                        {/* <RegisterSuccess /> */}
+                    </Route>
+
+                    <Route exact path="/register">
+                        <Register />
+                    </Route>
+
+                    <Route exact path="/login">
+                        <Login />
+                    </Route>
+
+                    <Route exact path="/registersuccess">
+                        <RegisterSuccess />
+                    </Route>
+                </Switch>
+            </Router>
+        </>
+    );
 }
 
 export default App;
