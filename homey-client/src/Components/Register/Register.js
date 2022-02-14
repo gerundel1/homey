@@ -13,43 +13,58 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
 import Background from "../Background/Background";
 import "./Register.css";
-
-function Copyright(props) {
-    return (
-        <Typography
-            variant="body2"
-            color="text.secondary"
-            align="center"
-            {...props}
-        >
-            {"Copyright © "}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{" "}
-            {new Date().getFullYear()}
-            {"."}
-        </Typography>
-    );
-}
-
 const theme = createTheme();
-
 export default function Register() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
-    };
-
+    const history = useHistory();
     const location = useLocation();
     const { userType } = location.state;
+    const {
+        register,
+        handleSubmit,
+        control,
+        formState: { errors },
+    } = useForm();
+
+    const onSubmit = (data) => {
+        // user input
+        // console.log(data);
+
+        const userData = {
+            name: data.firstName + " " + data.lastName,
+            email: data.email,
+            password: data.password,
+            type: userType,
+            phone: data.phone,
+            address: data.address,
+            cuisine: data.cuisine,
+        };
+        console.log(userData);
+
+        // add user to database
+
+        // axios({
+        //     url: "users/create",
+        //     method: "POST",
+        //     data: userData,
+        // })
+        //     .then(() => {
+        //         console.log("Data has been sent to the server");
+        //     })
+        //     .catch(() => {
+        //         console.log("Internal server error");
+        //     });
+
+        // Redirect to Congratulation page
+        history.push("/registersuccess");
+    };
+
+    console.log(errors);
 
     return (
         <ThemeProvider theme={theme}>
@@ -70,7 +85,7 @@ export default function Register() {
                     <Box
                         component="form"
                         noValidate
-                        onSubmit={handleSubmit}
+                        onSubmit={handleSubmit(onSubmit)}
                         sx={{ mt: 3 }}
                     >
                         <Grid container spacing={2}>
@@ -84,6 +99,15 @@ export default function Register() {
                                     id="firstName"
                                     label="First Name"
                                     autoFocus
+                                    {...register("firstName", {
+                                        required: "This field is required.",
+                                    })}
+                                    error={!!errors?.firstName}
+                                    helperText={
+                                        errors?.firstName
+                                            ? errors.firstName.message
+                                            : null
+                                    }
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -94,6 +118,15 @@ export default function Register() {
                                     label="Last Name"
                                     name="lastName"
                                     autoComplete="family-name"
+                                    {...register("lastName", {
+                                        required: "This field is required.",
+                                    })}
+                                    error={!!errors?.lastName}
+                                    helperText={
+                                        errors?.lastName
+                                            ? errors.lastName.message
+                                            : null
+                                    }
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -104,18 +137,21 @@ export default function Register() {
                                     label="Email Address"
                                     name="email"
                                     autoComplete="email"
+                                    {...register("email", {
+                                        required: "This field is required.",
+                                        pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                            message: "Invalid email address",
+                                        },
+                                    })}
+                                    error={!!errors?.email}
+                                    helperText={
+                                        errors?.email
+                                            ? errors.email.message
+                                            : null
+                                    }
                                 />
                             </Grid>
-                            {/* <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="confirmEmail"
-                                    label="Confirm Email Address"
-                                    name="confirmEmail"
-                                    autoComplete="email"
-                                />
-                            </Grid> */}
                             <Grid item xs={12}>
                                 <TextField
                                     required
@@ -125,6 +161,15 @@ export default function Register() {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
+                                    {...register("password", {
+                                        required: "This field is required.",
+                                    })}
+                                    error={!!errors?.password}
+                                    helperText={
+                                        errors?.password
+                                            ? errors.password.message
+                                            : null
+                                    }
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -133,12 +178,20 @@ export default function Register() {
                                     fullWidth
                                     name="confirmPassword"
                                     label="Confirm Password"
-                                    type="confirmPassword"
+                                    type="password"
                                     id="confirmPassword"
                                     autoComplete="new-password"
+                                    {...register("confirmPassword", {
+                                        required: "This field is required.",
+                                    })}
+                                    error={!!errors?.confirmPassword}
+                                    helperText={
+                                        errors?.confirmPassword
+                                            ? errors.confirmPassword.message
+                                            : null
+                                    }
                                 />
                             </Grid>
-
                             {/* extra fields for business user */}
                             {userType == "Business" ? (
                                 <>
@@ -151,6 +204,21 @@ export default function Register() {
                                             type="phone"
                                             id="phone"
                                             autoComplete="phone"
+                                            {...register("phone", {
+                                                required:
+                                                    "This field is required.",
+                                                pattern: {
+                                                    value: /^[0-9]{10}$/i,
+                                                    message:
+                                                        "Invalid phone number",
+                                                },
+                                            })}
+                                            error={!!errors?.phone}
+                                            helperText={
+                                                errors?.phone
+                                                    ? errors.phone.message
+                                                    : null
+                                            }
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
@@ -161,6 +229,16 @@ export default function Register() {
                                             label="Address"
                                             type="address"
                                             id="address"
+                                            {...register("address", {
+                                                required:
+                                                    "This field is required.",
+                                            })}
+                                            error={!!errors?.address}
+                                            helperText={
+                                                errors?.address
+                                                    ? errors.address.message
+                                                    : null
+                                            }
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
@@ -184,7 +262,6 @@ export default function Register() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            href="/registersuccess"
                         >
                             Register
                         </Button>

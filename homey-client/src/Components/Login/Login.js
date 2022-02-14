@@ -12,37 +12,29 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Background from "../Background/Background";
+import { useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
-function Copyright(props) {
-    return (
-        <Typography
-            variant="body2"
-            color="text.secondary"
-            align="center"
-            {...props}
-        >
-            {"Copyright © "}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{" "}
-            {new Date().getFullYear()}
-            {"."}
-        </Typography>
-    );
-}
+import Background from "../Background/Background";
 
 const theme = createTheme();
 
 export default function Login() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
+    const history = useHistory();
+
+    const {
+        register,
+        handleSubmit,
+        control,
+        formState: { errors },
+    } = useForm();
+
+    const onSubmit = (data) => {
+        // user input
+        console.log(data);
+
+        // Redirect to Congratulation page for now
+        history.push("/registersuccess");
     };
 
     return (
@@ -63,7 +55,7 @@ export default function Login() {
                     </Typography>
                     <Box
                         component="form"
-                        onSubmit={handleSubmit}
+                        onSubmit={handleSubmit(onSubmit)}
                         noValidate
                         sx={{ mt: 1 }}
                     >
@@ -76,6 +68,17 @@ export default function Login() {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            {...register("email", {
+                                required: "This field is required.",
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: "Invalid email address",
+                                },
+                            })}
+                            error={!!errors?.email}
+                            helperText={
+                                errors?.email ? errors.email.message : null
+                            }
                         />
                         <TextField
                             margin="normal"
@@ -86,6 +89,15 @@ export default function Login() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            {...register("password", {
+                                required: "This field is required.",
+                            })}
+                            error={!!errors?.password}
+                            helperText={
+                                errors?.password
+                                    ? errors.password.message
+                                    : null
+                            }
                         />
 
                         <Button
