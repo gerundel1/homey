@@ -1,0 +1,41 @@
+#navbar {
+    background: var(--primary-color-darkShade);
+    color: rgb(13, 26, 38);
+    position: fixed;
+    top: 0;
+    height: 60px;
+    width: 100%;
+    z-index: 10;
+    align-items: center;
+}
+
+#navbar {
+    height: 7vh;
+    background-color: var(--form-primary-color);
+    color: var(--form-secondary-color);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--primary-color-darkShade);
+}
+
+.nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+    height: 100%;
+    margin: auto;
+}
+
+.logo {
+    cursor: pointer;
+    color: var(--form-secondary-color);
+}
+
+.logo a {
+    text-decoration: none;
+    font-size: 1.5em;
+    color: var(--secondary-color);
+    letter-spacing: 3px;
+}
