@@ -1,0 +1,100 @@
+.full-page-content {
+    height: 90vh;
+}
+.homePage-wrapper {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.heading-text {
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+.homey_logo {
+    height: 300px;
+    width: 300px;
+}
+
+.center-child {
+    text-align: center;
+}
+
+.users-link {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 50vw;
+}
+
+.users-link a {
+    text-decoration: none;
+    font-size: 1em;
+    letter-spacing: 2px;
+    border-radius: 3px;
+    border-style: dotted;
+    color: black;
+    background-color: #cac9c9;
+    font-weight: 700;
+    padding: 18px;
+    border-radius: 20px;
+}
+
+#circle1 {
+    position: absolute;
+    width: 18vw;
+    height: 18vw;
+    border-radius: 50%;
+    background-color: rgba(229, 186, 186, 0.5);
+    top: 16vw;
+    left: 10vw;
+    z-index: -1;
+}
+
+#circle2 {
+    position: absolute;
+    width: 18vw;
+    height: 18vw;
+    overflow: hidden;
+    border-radius: 0;
+    top: 0;
+    right: 0;
+    z-index: -1;
+}
+
+#circle2::before {
+    content: "";
+    transform: translate(20%, 0%);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(234, 219, 212, 0.7);
+}
+
+#circle3 {
+    position: absolute;
+    width: 18vw;
+    height: 18vw;
+    overflow: hidden;
+    border-radius: 0;
+    bottom: 0;
+    right: 8vw;
+    z-index: -1;
+}
+
+#circle3::before {
+    content: "";
+    transform: translate(0%, 50%);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(186, 229, 222, 0.4);
+}
