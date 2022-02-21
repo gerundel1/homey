@@ -42,10 +42,17 @@ export default function Register() {
             type: userType,
             phone: data.phone,
             address: data.address,
-            cuisine: data.cuisine,
+            // Anas: this field is always undefined even if I enter a string
+            cuisine: data.cuisine
         };
-        console.log(userData);
 
+
+        axios.post(`http://localhost:8080/api/users/create`, userData)
+        .then(obj => console.log(obj))
+        .catch(err => {
+            // You may display this error message in the UI
+            console.log(err)
+        });
         // add user to database
 
         // axios({
@@ -247,7 +254,7 @@ export default function Register() {
                                             fullWidth
                                             name="cuisine"
                                             label="Cuisine"
-                                            type="cuisine"
+                                            type="text"
                                             id="cuisine"
                                         />
                                     </Grid>
