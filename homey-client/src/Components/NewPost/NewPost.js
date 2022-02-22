@@ -147,7 +147,7 @@ export default function NewPost() {
               <TextField
                 name="category"
                 fullWidth
-                label="Cuisine Category"
+                label="Cuisine Type"
                 id="category"
                 min="0"
                 required
