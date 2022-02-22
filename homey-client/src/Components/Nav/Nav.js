@@ -9,6 +9,7 @@ const Nav = () => {
                     <div className="logo">
                         <a href="#home">HOMEY</a>
                     </div>
+                    <div>Hello</div>
                 </div>
             </nav>
         </div>

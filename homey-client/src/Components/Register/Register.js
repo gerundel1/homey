@@ -42,30 +42,26 @@ export default function Register() {
             type: userType,
             phone: data.phone,
             address: data.address,
-            // Anas: this field is always undefined even if I enter a string
-            cuisine: data.cuisine
+            cuisine: data.cuisine,
         };
 
+        // default values for customer user
+        if (userType == "Customer") {
+            userData.phone = "1234567890";
+            userData.address = "N/A";
+            userData.cuisine = "N/A";
+        }
 
-        axios.post(`http://localhost:8080/api/users/create`, userData)
-        .then(obj => console.log(obj))
-        .catch(err => {
-            // You may display this error message in the UI
-            console.log(err)
-        });
-        // add user to database
+        console.log(userData);
 
-        // axios({
-        //     url: "users/create",
-        //     method: "POST",
-        //     data: userData,
-        // })
-        //     .then(() => {
-        //         console.log("Data has been sent to the server");
-        //     })
-        //     .catch(() => {
-        //         console.log("Internal server error");
-        //     });
+        axios
+            .post(`http://localhost:8080/api/users/create`, userData)
+            .then((obj) => console.log(obj))
+            .catch((err) => {
+                // You may display this error message in the UI
+                console.log(err.message);
+                alert(err.message);
+            });
 
         // Redirect to Congratulation page
         history.push("/registersuccess");
@@ -256,6 +252,16 @@ export default function Register() {
                                             label="Cuisine"
                                             type="text"
                                             id="cuisine"
+                                            {...register("cuisine", {
+                                                required:
+                                                    "This field is required.",
+                                            })}
+                                            error={!!errors?.cuisine}
+                                            helperText={
+                                                errors?.cuisine
+                                                    ? errors.cuisine.message
+                                                    : null
+                                            }
                                         />
                                     </Grid>
                                 </>
