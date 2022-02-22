@@ -7,6 +7,7 @@ import HomePage from "./Components/HomePage/HomePage";
 import Register from "./Components/Register/Register";
 import Login from "./Components/Login/Login";
 import RegisterSuccess from "./Components/RegisterSuccess/RegisterSuccess";
+import NewPost from "./Components/NewPost/NewPost";
 
 function App() {
     return (
@@ -30,6 +31,10 @@ function App() {
 
                     <Route exact path="/registersuccess">
                         <RegisterSuccess />
+                    </Route>
+                    
+                    <Route exact path="/newPost">
+                        <NewPost />
                     </Route>
                 </Switch>
             </Router>
