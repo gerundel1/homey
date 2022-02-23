@@ -19,17 +19,17 @@ router.get(
 router.post(
     '/product/create',
     upload.fields([{
-        name: images,
+        name: "images",
         maxCount: 4
     }]),
-    auth,
+    //auth,
     createProduct
 );
 
 router.put(
     '/product/update/:id',
     upload.fields([{
-        name: images,
+        name: "images",
         maxCount: 4
     }]),
     auth,

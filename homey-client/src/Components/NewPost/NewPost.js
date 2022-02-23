@@ -16,9 +16,10 @@ import "./NewPost.css";
 const theme = createTheme(); // add details after
 
 export default function NewPost() {
-  const [imageFiles, setImagesFiles] = useState({});
+  const [imageFiles, setImageFiles] = useState({});
   const [imgErrMsg, setImgErrMsg] = useState(null);
-
+  const [unit, setUnit] = useState(null);
+  const [allergies, setAllergies] = useState(null);
   const {
     register,
     formState: { errors },
@@ -26,25 +27,36 @@ export default function NewPost() {
   } = useForm();
 
   function handleImageUpload(e) {
+    setImageFiles({ photos: e.target.files });
+
     if (e.target.files.length > 4) {
       setImgErrMsg("Maximum 4 images.");
     } else {
       setImgErrMsg(null);
-      setImagesFiles({ images: e.target.files });
     }
   }
-  const onSubmit = (data, images) => {
+
+  function setUnitVar(e) {
+    setUnit(e.target.value);
+  }
+
+  function setAllergyVar(e) {
+    setAllergies(e.target.value);
+  }
+
+  const onSubmit = (data) => {
     if (imgErrMsg === null) {
-      const postData = {
-        name: data.itemName,
-        unitPrice: data.unitPrice,
-        pricePer: data.pricePer,
-        description: data.description,
-        images: imageFiles,
-        allergies: data.allergies,
-        quantity: data.quantity,
-        category: data.category,
-      };
+      let postData = new FormData();
+      postData.append("name", data.itemName);
+      postData.append("unitPrice", data.unitPrice);
+      postData.append("pricePer", unit);
+      postData.append("description", data.description);
+      postData.append("allergies", allergies);
+      postData.append("quantity", data.quantity);
+      postData.append("category", data.category);
+      for (var i = 0; i < imageFiles.photos.length; i++) {
+        postData.append("images", imageFiles.photos[i]);
+      }
 
       axios.post(`http://localhost:8080/api/product/create`, postData)
       .then(obj => console.log(obj))
@@ -118,6 +130,7 @@ export default function NewPost() {
                   label="Per Unit"
                   id="pricePer"
                   placeholder="E.g. dozen, loaf, cookie..."
+                  onChange={setUnitVar}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -176,6 +189,7 @@ export default function NewPost() {
                   label="Allergy Alerts"
                   id="allergies"
                   multiline
+                  onChange={setAllergyVar}
                   rows={3}
                 />
               </Grid>
