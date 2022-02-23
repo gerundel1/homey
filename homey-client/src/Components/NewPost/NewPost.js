@@ -9,48 +9,51 @@ import {
   TextField,
   Button,
   Typography,
-  FormControl,
 } from "@mui/material";
-import axios from 'axios';
+import axios from "axios";
+import "./NewPost.css";
 
 const theme = createTheme(); // add details after
 
 export default function NewPost() {
-  const [imagefile, setImagefile] = useState("");
+  const [imageFiles, setImagesFiles] = useState({});
+  const [imgErrMsg, setImgErrMsg] = useState(null);
 
   const {
     register,
-    handleSubmit,
     formState: { errors },
+    handleSubmit,
   } = useForm();
 
-  const onSubmit = (data) => {
-    const postData = {
-      name: data.itemName,
-      unitPrice: data.unitPrice,
-      pricePer: data.pricePer,
-      description: data.description,
-      images: imagefile,
-      allergies: data.allergies,
-      quantity: data.quantity,
-      category: data.category
-    };
-    console.log(postData);
+  function handleImageUpload(e) {
+    if (e.target.files.length > 4) {
+      setImgErrMsg("Maximum 4 images.");
+    } else {
+      setImgErrMsg(null);
+      setImagesFiles({ images: e.target.files });
+    }
+  }
+  const onSubmit = (data, images) => {
+    if (imgErrMsg === null) {
+      const postData = {
+        name: data.itemName,
+        unitPrice: data.unitPrice,
+        pricePer: data.pricePer,
+        description: data.description,
+        images: imageFiles,
+        allergies: data.allergies,
+        quantity: data.quantity,
+        category: data.category,
+      };
 
-    // axios({
-    //     url: "post/create",
-    //     method: "POST",
-    //     data: postData,
-    // })
-    //     .then(() => {
-    //         console.log("Data has been sent to the server");
-    //     })
-    //     .catch(() => {
-    //         console.log("Internal server error");
-    //     });
+      axios.post(`http://localhost:8080/api/product/create`, postData)
+      .then(obj => console.log(obj))
+      .catch(err => {
+          // You may display this error message in the UI
+          console.log(err)
+      });
+    }
   };
-
-  console.log(errors);
 
   return (
     <ThemeProvider theme={theme}>
@@ -84,13 +87,9 @@ export default function NewPost() {
                   required
                   {...register("itemName", {
                     required: "This field is required.",
-                })}
-                error={!!errors?.itemName}
-                helperText={
-                    errors?.itemName
-                        ? errors.itemName.message
-                        : null
-                }
+                  })}
+                  error={!!errors?.itemName}
+                  helperText={errors?.itemName ? errors.itemName.message : null}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -105,13 +104,11 @@ export default function NewPost() {
                   required
                   {...register("unitPrice", {
                     required: "This field is required.",
-                })}
-                error={!!errors?.unitPrice}
-                helperText={
-                    errors?.unitPrice
-                        ? errors.unitPrice.message
-                        : null
-                }
+                  })}
+                  error={!!errors?.unitPrice}
+                  helperText={
+                    errors?.unitPrice ? errors.unitPrice.message : null
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -134,34 +131,26 @@ export default function NewPost() {
                   required
                   {...register("quantity", {
                     required: "This field is required.",
-                })}
-                error={!!errors?.quantity}
-                helperText={
-                    errors?.quantity
-                        ? errors.quantity.message
-                        : null
-                }
+                  })}
+                  error={!!errors?.quantity}
+                  helperText={errors?.quantity ? errors.quantity.message : null}
                 />
               </Grid>
               <Grid item xs={12}>
-              <TextField
-                name="category"
-                fullWidth
-                label="Cuisine Type"
-                id="category"
-                min="0"
-                required
-                {...register("category", {
-                  required: "This field is required.",
-              })}
-              error={!!errors?.category}
-              helperText={
-                  errors?.category
-                      ? errors.quantity.message
-                      : null
-              }
-              />
-            </Grid>
+                <TextField
+                  name="category"
+                  fullWidth
+                  label="Cuisine Type"
+                  id="category"
+                  min="0"
+                  required
+                  {...register("category", {
+                    required: "This field is required.",
+                  })}
+                  error={!!errors?.category}
+                  helperText={errors.category ? errors.quantity.message : null}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -173,13 +162,11 @@ export default function NewPost() {
                   rows={4}
                   {...register("description", {
                     required: "This field is required.",
-                })}
-                error={!!errors?.description}
-                helperText={
-                    errors?.description
-                        ? errors.description.message
-                        : null
-                }
+                  })}
+                  error={!!errors?.description}
+                  helperText={
+                    errors?.description ? errors.description.message : null
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -192,21 +179,25 @@ export default function NewPost() {
                   rows={3}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <FormControl>
-                  <label>Product Image</label>
-                </FormControl>
+
+              <Grid item xs={12} sm={5}>
+                <label className="image-label">Upload Images (up to 4)</label>
+                {imgErrMsg !== null && (
+                  <div className="image-error">{imgErrMsg}</div>
+                )}
               </Grid>
-              <Grid item xs={12} sm={8}>
-                <FormControl>
-                  <input
-                    type="file"
-                    id="itemImage"
-                    onChange={(e) => setImagefile(e.target.value)}
-                  />
-                </FormControl>
+
+              <Grid item xs={12} sm={7}>
+                <input
+                  type="file"
+                  id="images"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageUpload}
+                />
               </Grid>
             </Grid>
+
             <Button
               className="buttonHover"
               type="submit"
