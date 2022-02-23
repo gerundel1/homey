@@ -3,6 +3,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { registrationSchema, loginSchema } = require('../helpers/validation');
 
+let refreshTokens = [];
+
+function generateAccessToken(user){
+  return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '2h' })
+}
+
 const createUser = async (req, res) => {
     // server site validation
     try {
@@ -10,10 +16,11 @@ const createUser = async (req, res) => {
     } catch (err) {
         //this returns an array of errors; ref -> https://joi.dev/api/?v=17.6.0#errors
         res.status(400).json({errorsArray: err.details});
+        return;
     }
 
     // check if email is registered
-    const foundUser = await UserModel.findOne({email: req.body.emai});
+    const foundUser = await UserModel.findOne({email: req.body.email});
     if(foundUser) {
         res.status(406).json({message: "The user with that email is already exist"})
     } else {
@@ -28,20 +35,9 @@ const createUser = async (req, res) => {
             address: req.body.address,
             cuisine: req.body?.cuisine
         });
-
-        const token = jwt.sign(
-            { user_id: newUser._id, email: req.body.email },
-            process.env.TOKEN_SECRET,
-            {
-              expiresIn: "2h",
-            }
-          );
-          // save user token
-          newUser.token = token;
           res.status(201).json(newUser);
         } catch(error) {
             res.status(400).json(`Error occurred when create user in the database: ${ error }`);
-
         }
     }
 }
@@ -67,20 +63,12 @@ const loginUser = async (req, res) =>{
         const user = await User.findOne({ email });
     
         if (user && (await bcrypt.compare(password, user.password))) {
-          // Create token
-          const token = jwt.sign(
-            { user_id: user._id, email: email },
-            process.env.TOKEN_KEY,
-            {
-              expiresIn: "2h",
-            }
-          );
-    
-          // save user token
-          user.token = token;
-    
+          
+          const accessToken = generateAccessToken({ user_id: user._id, email: email });
+          const refreshToken = jwt.sign({ user_id: user._id, email: email }, process.env.TOKEN_SECRET);
+          refreshTokens.push(refreshToken);
           // user
-          res.status(200).json(user);
+          res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken, user: user, message: "Logined In!" });
         }
         res.status(400).send("Invalid Credentials");
       } catch (err) {

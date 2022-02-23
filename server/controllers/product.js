@@ -1,20 +1,40 @@
 const ProductModel = require('../model/product.model');
 const fs = require('fs');
 
-const getAllProductsById = async (req, res) => {
-    try {
-        const userId = req.params.id;
-        const products = await ProductModel.find({userId: userId});
-        res.status(200).json(products);
-    } catch (err) {
-        res.status(400).json({error: err});
-    }
-}
 
 const getProductById = async (req, res) => {
     try {
         const product = await ProductModel.findById(req.params.id);
         res.status(200).json(product);
+    } catch (err) {
+        res.status(400).json(`An error occured when retrieving the product form db: ${err}`);
+    }
+}
+
+// Example of request url: http://localhost:8080/api/users/get_all?user=john.smith@example.com&category=baked&order=unitPrice&page=2
+// Please note that pagination in this function starts from 0 (0 is 1 page)
+// Limit is a field that limits the number of records in the returned array
+// For sorting, you can pass 'desc' for descending and 'asc' for ascending (desc is default)
+const getProductsByCriteria = async (req, res) => {
+    try {
+        const order = req.query.order || 'name';
+        const sort = req.query.sort || 'desc'
+        const category = req.query.category || null;
+        const user = req.query.user || null;
+        const page = req.query.page || 0;
+        const limit = req.query.limit || 20;
+        let criteria = {};
+        if(category) {
+            criteria['category'] = category;
+        }
+        if(user) {
+            criteria['email'] = user;
+        }
+        let orderCondition = {};
+        orderCondition[order] = sort;
+
+        const products = await ProductModel.find(criteria).sort(orderCondition).skip(page * limit).limit(limit);
+        res.status(200).json(products);
     } catch (err) {
         res.status(400).json(`An error occured when retrieving the product form db: ${err}`);
     }
@@ -33,6 +53,7 @@ const createProduct = async (req, res) => {
             unitPrice: req.body.unitPrice,
             pricePer: req.body.pricePer,
             description: req.body.description,
+            category: req.body.category,
             images: productPictures,
             allergies: req.body.allergies,
             quantity: req.body.quantity
@@ -51,6 +72,7 @@ const updateProduct = async (req, res) => {
         unitPrice: req.body.unitPrice,
         pricePer: req.body.pricePer,
         description: req.body.description,
+        category: req.body.category,
         allergies: req.body.allergies,
         quantity: req.body.quantity
     };
@@ -103,7 +125,7 @@ const deleteProduct = async (req, res) => {
 }
 
 module.exports = {
-    getAllProductsById,
+    getProductsByCriteria,
     getProductById,
     createProduct,
     updateProduct,
