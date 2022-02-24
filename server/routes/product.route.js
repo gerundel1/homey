@@ -22,7 +22,7 @@ router.post(
         name: 'images',
         maxCount: 4
     }]),
-    //auth,
+    // auth,
     createProduct
 );
 

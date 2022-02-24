@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import logo from "./logo.svg";
 import React, { createContext } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -9,7 +8,7 @@ import HomePage from "./Components/HomePage/HomePage";
 import Register from "./Components/Register/Register";
 import Login from "./Components/Login/Login";
 import RegisterSuccess from "./Components/RegisterSuccess/RegisterSuccess"; 
-import React, { createContext } from 'react';
+import NewPost from "./Components/NewPost/NewPost"
 
 export const UserContext = createContext({});
 

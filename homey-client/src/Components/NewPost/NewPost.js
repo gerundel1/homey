@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Background from "../Background/Background";
 import { useForm } from "react-hook-form";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import "./NewPost.css";
+//import UserContext from "../../App"
 
 const theme = createTheme(); // add details after
 
@@ -20,6 +21,9 @@ export default function NewPost() {
   const [imgErrMsg, setImgErrMsg] = useState(null);
   const [unit, setUnit] = useState(null);
   const [allergies, setAllergies] = useState(null);
+
+  //RESET TO USER ID THROUGH CONTEXT WHEN REGISTER OK
+  const [user_id] = useState("6216c85131782f7b17b57584");
   const {
     register,
     formState: { errors },
@@ -47,6 +51,7 @@ export default function NewPost() {
   const onSubmit = (data) => {
     if (imgErrMsg === null) {
       let postData = new FormData();
+      postData.append("userId", user_id);
       postData.append("name", data.itemName);
       postData.append("unitPrice", data.unitPrice);
       postData.append("pricePer", unit);
@@ -59,7 +64,11 @@ export default function NewPost() {
       }
 
       axios.post(`http://localhost:8080/api/product/create`, postData)
-      .then(obj => console.log(obj))
+      .then( obj => {
+        console.log(obj);
+        //REDIRECT TO PRODUCTS PAGE
+        
+      })
       .catch(err => {
           // You may display this error message in the UI
           console.log(err)

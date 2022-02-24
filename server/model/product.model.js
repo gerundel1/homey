@@ -18,7 +18,7 @@ const productSchema = new Schema({
         required: true
     },
     pricePer: {
-        type: Number
+        type: String
     },
     description: {
         type: String,
