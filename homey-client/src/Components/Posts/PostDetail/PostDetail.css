@@ -1,0 +1,15 @@
+.postdetail-container {
+    margin: 30px;
+}
+
+.postdetail-container h1 {
+    margin-bottom: 20px;
+}
+
+.postdetail-container p {
+    margin: 20px 0;
+}
+
+.btnAddCart {
+    background-color: aqua;
+}

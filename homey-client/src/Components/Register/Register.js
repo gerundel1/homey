@@ -43,16 +43,16 @@ export default function Register() {
             phone: data.phone,
             address: data.address,
             // Anas: this field is always undefined even if I enter a string
-            cuisine: data.cuisine
+            cuisine: data.cuisine,
         };
 
-
-        axios.post(`http://localhost:8080/api/users/create`, userData)
-        .then(obj => console.log(obj))
-        .catch(err => {
-            // You may display this error message in the UI
-            console.log(err)
-        });
+        axios
+            .post(`http://localhost:8080/api/users/create`, userData)
+            .then((obj) => console.log(obj))
+            .catch((err) => {
+                // You may display this error message in the UI
+                console.log(err);
+            });
         // add user to database
 
         // axios({
@@ -80,7 +80,7 @@ export default function Register() {
                 <Box
                     className="shadowBox"
                     sx={{
-                        marginTop: 8,
+                        marginTop: 15,
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",

@@ -14,7 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useContext } from 'react';
+import { useContext } from "react";
 import Background from "../Background/Background";
 import axios from "axios";
 import { UserContext } from "../../App";
@@ -23,7 +23,8 @@ const theme = createTheme();
 
 export default function Login() {
     const history = useHistory();
-    const { setUserName, setLoginStatus, setUserType, setUserEmail } = useContext(UserContext);
+    const { setUserName, setLoginStatus, setUserType, setUserEmail } =
+        useContext(UserContext);
 
     const {
         register,
@@ -33,22 +34,24 @@ export default function Login() {
     } = useForm();
 
     const onSubmit = (data) => {
-        axios.post('http://localhost:8080/api/users/login', {
-            email: data.email,
-            password: data.password
-        })
-        .then(res => {
-            localStorage.setItem('token', 'Bearer ' + res.data.accessToken);
-            localStorage.setItem('refreshToken', res.data.refreshToken);
+        axios
+            .post("http://localhost:8080/api/users/login", {
+                email: data.email,
+                password: data.password,
+            })
+            .then((res) => {
+                localStorage.setItem("token", "Bearer " + res.data.accessToken);
+                localStorage.setItem("refreshToken", res.data.refreshToken);
 
-            setUserName(res.data.user.name);
-            setUserEmail(res.data.user.email);
-            setUserType(res.data.user.type);
-            setLoginStatus(true);
-        }).catch (err => {
-            // You may display this error message in the UI
-            console.log(err);
-        })
+                setUserName(res.data.user.name);
+                setUserEmail(res.data.user.email);
+                setUserType(res.data.user.type);
+                setLoginStatus(true);
+            })
+            .catch((err) => {
+                // You may display this error message in the UI
+                console.log(err);
+            });
 
         // Redirect to Congratulation page for now
         history.push("/registersuccess");
@@ -61,7 +64,7 @@ export default function Login() {
                 <Box
                     className="shadowBox"
                     sx={{
-                        marginTop: 8,
+                        marginTop: 15,
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",

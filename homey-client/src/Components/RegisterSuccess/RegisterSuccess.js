@@ -20,7 +20,7 @@ function RegisterSuccess() {
                 <Link
                     className="explore"
                     to={{
-                        pathname: "/",
+                        pathname: "/postlist",
                         state: { userType: "Customer" },
                     }}
                 >
