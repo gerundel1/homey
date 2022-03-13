@@ -43,6 +43,7 @@ export default function Login() {
                 localStorage.setItem("token", "Bearer " + res.data.accessToken);
                 localStorage.setItem("refreshToken", res.data.refreshToken);
 
+<<<<<<< HEAD
                 setUserName(res.data.user.name);
                 setUserEmail(res.data.user.email);
                 setUserType(res.data.user.type);
@@ -52,6 +53,17 @@ export default function Login() {
                 // You may display this error message in the UI
                 console.log(err);
             });
+=======
+            setUserName(res.data.user.name);
+            setUserEmail(res.data.user.email);
+            setUserType(res.data.user.type);
+            setLoginStatus(true);
+            console.log(res.data);
+        }).catch (err => {
+            // You may display this error message in the UI
+            console.log(err);
+        })
+>>>>>>> 8a2350cc6be8c1106a5d9f1fe9f99b5a62788426
 
         // Redirect to Congratulation page for now
         history.push("/registersuccess");
