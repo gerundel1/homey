@@ -45,6 +45,7 @@ export default function Login() {
             setUserEmail(res.data.user.email);
             setUserType(res.data.user.type);
             setLoginStatus(true);
+            console.log(res.data);
         }).catch (err => {
             // You may display this error message in the UI
             console.log(err);

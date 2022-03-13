@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import "./NewPost.css";
-//import UserContext from "../../App"
 
 const theme = createTheme(); // add details after
 
