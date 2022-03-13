@@ -18,7 +18,7 @@ const productSchema = new Schema({
         required: true
     },
     pricePer: {
-        type: Number
+        type: String
     },
     description: {
         type: String,
@@ -33,9 +33,9 @@ const productSchema = new Schema({
     images: [{
         type: String
     }],
-    allergies: [{
+    allergies: {
         type: String
-    }],
+    },
     quantity: {
         type: Number,
         required: true

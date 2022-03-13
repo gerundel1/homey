@@ -14,7 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
+import { useContext } from 'react';
 import Background from "../Background/Background";
 import axios from "axios";
 import { UserContext } from "../../App";
@@ -45,6 +45,7 @@ export default function Login() {
             setUserEmail(res.data.user.email);
             setUserType(res.data.user.type);
             setLoginStatus(true);
+            console.log(res.data);
         }).catch (err => {
             // You may display this error message in the UI
             console.log(err);

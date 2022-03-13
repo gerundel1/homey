@@ -9,8 +9,8 @@ router.post(
 );
 
 router.post(
-    '/users/login',
-    loginUser
+  '/users/login',
+  loginUser
 );
 
 

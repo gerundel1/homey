@@ -54,13 +54,12 @@ const loginUser = async (req, res) =>{
     try {
         // Get user input
         const { email, password } = req.body;
-    
         // Validate user input
         if (!(email && password)) {
           res.status(400).send("All input is required");
         }
         // Validate if user exist in our database
-        const user = await User.findOne({ email });
+        const user = await UserModel.findOne({ email: email });
     
         if (user && (await bcrypt.compare(password, user.password))) {
           
@@ -69,10 +68,11 @@ const loginUser = async (req, res) =>{
           refreshTokens.push(refreshToken);
           // user
           res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken, user: user, message: "Logined In!" });
+          return;
         }
         res.status(400).send("Invalid Credentials");
       } catch (err) {
-        res.status(400).json(`Error occurred when authenticating the user: ${ error }`);
+        res.status(400).json(`Error occurred when authenticating the user: ${ err }`);
       }
 }
 
