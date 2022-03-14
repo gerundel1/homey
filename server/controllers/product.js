@@ -1,5 +1,6 @@
 const ProductModel = require('../model/product.model');
 const fs = require('fs');
+const path = require('path');
 
 
 const getProductById = async (req, res) => {
@@ -124,10 +125,17 @@ const deleteProduct = async (req, res) => {
     });
 }
 
+const returnPictureByFilename = async (req, res) => {
+    const filename = req.params.name;
+    let p = path.join(__dirname, `../uploads/images/${filename}`);
+    res.sendFile(p);
+}
+
 module.exports = {
     getProductsByCriteria,
     getProductById,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    returnPictureByFilename
 };

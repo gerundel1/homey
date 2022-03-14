@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState, useEffect, useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,10 +12,29 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { UserContext } from "../../../App";
+import axios from "axios";
 
 import "./PostDetail.css";
 
-function PostDetail() {
+function PostDetail(props) {
+    const { userName } = useContext(UserContext);
+    const [product, setProduct] = useState({});
+    const productId = props.match.params.id;
+    const [image, setImage] = useState("");
+    
+    useEffect(async () => {
+        await axios.get(`http://localhost:8080/api/product/${productId}`)
+        .then(result => {
+            setProduct(result.data);
+            setImage(`http://localhost:8080/api/product/image/${result.data.images[0]}`);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }, []);
+
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -25,27 +44,25 @@ function PostDetail() {
     };
     return (
         <div className="postdetail-container">
-            <h1>Red Velvet Cookies</h1>
+            <h1>{product.name}</h1>
             <img
-                src="https://source.unsplash.com/random"
+                src={image}
                 alt="food image"
                 width="600"
                 height="400"
             />
             <p>
-                <strong>Sold By :</strong> Steve parker
+                <strong>Sold By :</strong> {userName}
             </p>
             <p>
-                <strong>Price :</strong> $4.00 / Dozen
+                <strong>Price :</strong> ${product.unitPrice} / {product.pricePer}
             </p>
             <p>
-                <strong>Description :</strong> These are soft-baked red velvet
-                chocolate chip cookie recipe made from scratch.
+                <strong>Description :</strong> {product.description}
             </p>
             <p>
                 <strong>Allergy Notice :</strong>
-                This item contains peanuts and may contain traces of other nuts
-                and seeds.
+                {product.allergies}
             </p>
 
             <Box

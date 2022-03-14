@@ -22,7 +22,8 @@ export default function NewPost() {
   const [allergies, setAllergies] = useState(null);
 
   //RESET TO USER ID THROUGH CONTEXT WHEN REGISTER OK
-  const [user_id] = useState("6216c85131782f7b17b57584");
+  const loggedInUser = JSON.parse(localStorage.getItem("user"));
+
   const {
     register,
     formState: { errors },
@@ -50,7 +51,7 @@ export default function NewPost() {
   const onSubmit = (data) => {
     if (imgErrMsg === null) {
       let postData = new FormData();
-      postData.append("userId", user_id);
+      postData.append("userId", loggedInUser._id);
       postData.append("name", data.itemName);
       postData.append("unitPrice", data.unitPrice);
       postData.append("pricePer", unit);
@@ -62,7 +63,7 @@ export default function NewPost() {
         postData.append("images", imageFiles.photos[i]);
       }
 
-      axios.post(`http://localhost:8080/api/product/create`, postData)
+      axios.post('http://localhost:8080/api/product/create', postData)
       .then( obj => {
         console.log(obj);
         //REDIRECT TO PRODUCTS PAGE

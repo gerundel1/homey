@@ -1,20 +1,69 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
 import { Link } from "react-router-dom";
-import SearchBar from "material-ui-search-bar";
 import "./PostList.css";
+import axios from "axios";
 
 export default function PostList() {
+    const [products, setProducts] = useState([]);
+
+    useEffect(async () => {
+            await axios.get('http://localhost:8080/api/products/get_all')
+            .then(result => {
+                setProducts(result.data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, []);
+
+        let mappedProducts = products.map(product => {
+            return (
+            <Grid item key={product._id} xs={3}>
+                    <Card sx={{ maxWidth: 345 }}>
+                        <CardActionArea component={Link} to={`/PostDetail/${product._id}`}>
+                            <CardMedia
+                                component="img"
+                                height="140"
+                                image={`http://localhost:8080/api/product/image/${product.images[0]}`}
+                                alt="product picture"
+                            />
+                            <CardContent>
+                                <Typography
+                                    gutterBottom
+                                    variant="h5"
+                                    component="div"
+                                >
+                                    {product.name}
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                >
+                                    {product.unitPrice} / {product.pricePer}
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                >
+                                    Quantity: {product.quantity}
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </Grid>
+            )
+        });
+
     return (
         <div className="postlist-container">
             <div className="btnadd">
+                
                 <Link className="nav-link-newpost" to="/newpost">
                     +
                 </Link>
@@ -26,41 +75,7 @@ export default function PostList() {
                 onRequestSearch={() => console.log("Hello")}
             /> */}
             <Grid container spacing={5}>
-                {/* Single Card */}
-                <Grid item xs={3}>
-                    <Card sx={{ maxWidth: 345 }}>
-                        <CardActionArea component={Link} to="/PostDetail">
-                            <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://source.unsplash.com/random"
-                                alt="green iguana"
-                            />
-                            <CardContent>
-                                <Typography
-                                    gutterBottom
-                                    variant="h5"
-                                    component="div"
-                                >
-                                    Rainbow Bread
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                >
-                                    $6.00 / loaf
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                >
-                                    Quantity: 15
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </Grid>
-                {/*  End */}
+                {mappedProducts}
             </Grid>
         </div>
     );

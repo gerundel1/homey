@@ -1,19 +1,24 @@
 const express = require('express');
-const { createProduct, updateProduct, deleteProduct, getProductById, getProductsByCriteria } = require('../controllers/product');
+const { createProduct, updateProduct, deleteProduct, getProductById, getProductsByCriteria, returnPictureByFilename } = require('../controllers/product');
 const auth = require('../helpers/auth');
 const {upload} = require('../helpers/storagehelper');
 const router = express.Router();
 
 router.get(
     '/product/:id',
-    auth,
+    // auth,
     getProductById
 );
 
 router.get(
-    'product/get_all',
-    auth,
+    '/products/get_all',
+    // auth,
     getProductsByCriteria
+);
+
+router.get(
+    '/product/image/:name',
+    returnPictureByFilename
 )
 
 router.post(
@@ -27,7 +32,7 @@ router.post(
 );
 
 router.put(
-    '/product/update/:id',
+    '/products/update/:id',
     upload.fields([{
         name: 'images',
         maxCount: 4
@@ -37,7 +42,7 @@ router.put(
 );
 
 router.delete(
-    '/product/delete/:id',
+    '/products/delete/:id',
     auth,
     deleteProduct
 )
