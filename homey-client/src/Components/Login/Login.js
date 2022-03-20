@@ -23,7 +23,8 @@ const theme = createTheme();
 
 export default function Login() {
     const history = useHistory();
-    const { setUserName, setLoginStatus, setUserType, setUserEmail } = useContext(UserContext);
+    const { setUserName, setLoginStatus, setUserType, setUserEmail } =
+        useContext(UserContext);
 
     const {
         register,
@@ -41,17 +42,19 @@ export default function Login() {
             .then((res) => {
                 localStorage.setItem("token", "Bearer " + res.data.accessToken);
                 localStorage.setItem("refreshToken", res.data.refreshToken);
-                localStorage.setItem('user', JSON.stringify(res.data.user));
+                localStorage.setItem("user", JSON.stringify(res.data.user));
 
-            setUserName(res.data.user.name);
-            setUserEmail(res.data.user.email);
-            setUserType(res.data.user.type);
-            setLoginStatus(true);
-            console.log(res.data);
-        }).catch (err => {
-            // You may display this error message in the UI
-            console.log(err);
-        })
+                setUserName(res.data.user.name);
+                setUserEmail(res.data.user.email);
+                setUserType(res.data.user.type);
+                setLoginStatus(true);
+                console.log(res.data);
+                console.log(res.data.user.name);
+            })
+            .catch((err) => {
+                // You may display this error message in the UI
+                console.log(err);
+            });
 
         // Redirect to Congratulation page for now
         history.push("/registersuccess");
