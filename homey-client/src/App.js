@@ -13,6 +13,7 @@ import Layout from "./Components/Layout/Layout";
 import PostDetail from "./Components/Posts/PostDetail/PostDetail";
 import OrderListSeller from "./Components/Orders/SellerOrder/OrderListSeller";
 import SearchPost from "./Components/Posts/SearchPost/SearchPost";
+import OrderListBuyer from "./Components/Orders/BuyerOrder/OrderListBuyer";
 
 const CART_LOCAL_STORAGE_KEY = "homey.cart";
 
@@ -20,9 +21,9 @@ export const UserContext = createContext({});
 
 function App() {
     const loggedInUser = JSON.parse(localStorage.getItem("user"));
-    let initialState = { login: false, userName: "", type: "", email: ""};
+    let initialState = { login: false, userName: "", type: "", email: "" };
 
-    if(loggedInUser) {
+    if (loggedInUser) {
         initialState.login = true;
         initialState.userName = loggedInUser.name;
         initialState.type = loggedInUser.type;
@@ -36,71 +37,85 @@ function App() {
     const [cart, setCart] = useReducer(cartReducer, []);
 
     useEffect(() => {
-        const storedCart = JSON.parse(localStorage.getItem(CART_LOCAL_STORAGE_KEY));
-        if(storedCart) {
-          setCart({storedCart, type: 'addArray'})
-        };
-      }, []);
-    
+        const storedCart = JSON.parse(
+            localStorage.getItem(CART_LOCAL_STORAGE_KEY)
+        );
+        if (storedCart) {
+            setCart({ storedCart, type: "addArray" });
+        }
+    }, []);
+
     useEffect(() => {
-        localStorage.setItem(CART_LOCAL_STORAGE_KEY, JSON.stringify(cart))
+        localStorage.setItem(CART_LOCAL_STORAGE_KEY, JSON.stringify(cart));
     }, [cart]);
 
     function cartReducer(state, action) {
-        switch(action.type) {
-          case 'addArray': 
-          {
-            return [...action.storedCart]
-          }
-          case 'add':
-            return [...state, action.product];
-          case 'remove':
-            {
-            const productIndex = state.findIndex(item => item.id === action.product.id);
-            if(productIndex < 0) {
-              return state;
+        switch (action.type) {
+            case "addArray": {
+                return [...action.storedCart];
             }
-            const update = [...state];
-            update.splice(productIndex, 1)
-            return update;
+            case "add":
+                return [...state, action.product];
+            case "remove": {
+                const productIndex = state.findIndex(
+                    (item) => item.id === action.product.id
+                );
+                if (productIndex < 0) {
+                    return state;
+                }
+                const update = [...state];
+                update.splice(productIndex, 1);
+                return update;
             }
-          case 'chgQuantity':
-            {
-            const productIndex = state.findIndex(item => item.id === action.product.id);
-            if(productIndex < 0) {
-              return state;
+            case "chgQuantity": {
+                const productIndex = state.findIndex(
+                    (item) => item.id === action.product.id
+                );
+                if (productIndex < 0) {
+                    return state;
+                }
+                const update = [...state];
+                update[productIndex].quantity = action.quantity;
+                return update;
             }
-            const update = [...state];
-            update[productIndex].quantity = action.quantity;
-            return update;
+            case "clean": {
+                const update = [];
+                return update;
             }
-          case 'clean': {
-            const update = [];
-            return update;
-          } 
-          default:
-            return state;
+            default:
+                return state;
         }
-      }
+    }
 
-      function add(product) {
-        setCart({ product, type: 'add' });
-      }
-    
-      function remove(product) {
-        setCart({ product, type: 'remove' });
-      }
-    
-      function alterQuantity(product, quantity) {
-        setCart({ product, type: 'chgQuantity', quantity: quantity });
-      }
-    
-      function cleanUp() {
-        setCart({type: 'clean'});
-      }
+    function add(product) {
+        setCart({ product, type: "add" });
+    }
+
+    function remove(product) {
+        setCart({ product, type: "remove" });
+    }
+
+    function alterQuantity(product, quantity) {
+        setCart({ product, type: "chgQuantity", quantity: quantity });
+    }
+
+    function cleanUp() {
+        setCart({ type: "clean" });
+    }
 
     return (
-        <UserContext.Provider value={{userName, setUserName, loginStatus, setLoginStatus, userType, setUserType, userEmail, setUserEmail }}>
+        <UserContext.Provider
+            value={{
+                userName,
+                setUserName,
+                loginStatus,
+                setLoginStatus,
+                userType,
+                setUserType,
+                userEmail,
+                setUserEmail,
+            }}
+        >
             <Router>
                 <Nav />
                 <Switch>
@@ -125,9 +140,16 @@ function App() {
                                 <Route exact path="/postlist">
                                     <PostList />
                                 </Route>
-                                <Route exact path="/postdetail/:id" component={PostDetail}></Route>
+                                <Route
+                                    exact
+                                    path="/postdetail/:id"
+                                    component={PostDetail}
+                                ></Route>
                                 <Route exact path="/OrderListSeller">
                                     <OrderListSeller />
+                                </Route>
+                                <Route exact path="/OrderListBuyer">
+                                    <OrderListBuyer />
                                 </Route>
                                 <Route exact path="/searchpost">
                                     <SearchPost />

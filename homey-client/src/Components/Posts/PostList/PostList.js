@@ -13,57 +13,54 @@ export default function PostList() {
     const [products, setProducts] = useState([]);
 
     useEffect(async () => {
-            await axios.get('http://localhost:8080/api/products/get_all')
-            .then(result => {
+        await axios
+            .get("http://localhost:8080/api/products/get_all")
+            .then((result) => {
                 setProducts(result.data);
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
     }, []);
 
-        let mappedProducts = products.map(product => {
-            return (
+    let mappedProducts = products.map((product) => {
+        return (
             <Grid item key={product._id} xs={3}>
-                    <Card sx={{ maxWidth: 345 }}>
-                        <CardActionArea component={Link} to={`/PostDetail/${product._id}`}>
-                            <CardMedia
-                                component="img"
-                                height="140"
-                                image={`http://localhost:8080/api/product/image/${product.images[0]}`}
-                                alt="product picture"
-                            />
-                            <CardContent>
-                                <Typography
-                                    gutterBottom
-                                    variant="h5"
-                                    component="div"
-                                >
-                                    {product.name}
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                >
-                                    {product.unitPrice} / {product.pricePer}
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                >
-                                    Quantity: {product.quantity}
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </Grid>
-            )
-        });
+                <Card sx={{ maxWidth: 345 }}>
+                    <CardActionArea
+                        component={Link}
+                        to={`/PostDetail/${product._id}`}
+                    >
+                        <CardMedia
+                            component="img"
+                            height="140"
+                            image={`http://localhost:8080/api/product/image/${product.images[0]}`}
+                            alt="product picture"
+                        />
+                        <CardContent>
+                            <Typography
+                                gutterBottom
+                                variant="h5"
+                                component="div"
+                            >
+                                {product.name}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {product.unitPrice} / {product.pricePer}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Quantity: {product.quantity}
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            </Grid>
+        );
+    });
 
     return (
         <div className="postlist-container">
             <div className="btnadd">
-                
                 <Link className="nav-link-newpost" to="/newpost">
                     +
                 </Link>
