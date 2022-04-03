@@ -1,0 +1,171 @@
+.cart-image {
+    max-width: 15em;
+    height: auto;
+    border-radius: 13px;
+}
+
+.main-grid-container {
+    margin-top: 3em;
+    margin-left: 1em;
+}
+
+.modal-header {
+    background-color: var(--main-bg-color);
+}
+.modal-footer {
+    background-color: rgb(230, 230, 230);
+}
+
+.checkout-btn.btn {
+    width: 200px;
+    height: 55px;
+    background-color: black;
+    border-radius: 40px;
+    margin: 15px auto;
+    color: white;
+    font-size: 25px;
+    font-family: 'Lato', sans-serif;
+    text-align: 'center';
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.checkout-btn.btn:hover {
+    background-color:inherit;
+    color: black;
+    border: 3px solid  black;
+}
+
+.footer {
+  display: grid;
+  font-size: 25px; 
+}
+
+.totalNum {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0.5em;
+    font-weight: bold;
+    font-size: 30px;
+    border: 3px solid black;
+    border-radius: 40px;
+    padding: 3px;  
+}
+
+.col-info {
+    text-align: center;
+    font-size: 30px;
+}
+
+.items {
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgb(200, 200, 200);
+    border-radius: 13px;
+    margin-bottom: 3px;
+    padding: 0px 0px;
+    background-color: #dce5e2;
+    box-shadow: 0 4px 13px rgb(211, 211, 211);
+    max-width: 100%;
+    min-width: 100%;
+}
+.items.row {
+    margin: 3px 0;
+}
+
+.title {
+    font-size: 20px;
+}
+
+.column {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.price {
+    text-align:right;
+    font-size:25px;
+    font-weight: bold;
+}
+
+.subPrice {
+    font-weight: bold;
+}
+
+.checkout {
+    display: grid;
+    justify-content:right;
+    justify-items: right;
+    padding-right: px;
+}
+
+.subTotal {
+    text-align: center;
+    line-height: 2;
+}
+
+.quantity span {
+    font-size: 2.5em;
+    line-height:1;
+    margin-right: 0.35em;
+    margin-left: 0.35em;
+    text-align: center;
+    vertical-align:middle;
+}
+.quantity Button {
+    width: 3em;
+    height: 3em;
+}
+
+.quantity {
+    display: grid;
+}
+
+.desc {
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.desc p{
+    font-size: 1.25em;
+}
+
+.btn_quantity {
+    border-radius: 50%;
+    font-size: 1.1em;
+    color: #fff;
+    background-color:black;
+}
+
+.btn_quantity span{
+    font-size: 1.7em;
+    vertical-align: baseline;
+}
+
+.modal-w {
+    width: 100%;
+}
+
+
+@media only screen and (max-width: 1200px) {
+    .modal-w {
+        max-width: 90%;
+    }
+    .cart-image {
+        max-width: 12em;
+    }
+
+    .quantity Button {
+        width: 2em;
+        height: 2em;
+    }
+
+    .quantity span {
+        font-size: 1.5em;
+        line-height: 1;
+        text-align: center;
+        vertical-align:baseline;
+    }
+}

@@ -1,4 +1,5 @@
 import "dotenv/config";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { createContext, useReducer, useEffect, useState } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -14,6 +15,7 @@ import PostDetail from "./Components/Posts/PostDetail/PostDetail";
 import OrderListSeller from "./Components/Orders/SellerOrder/OrderListSeller";
 import SearchPost from "./Components/Posts/SearchPost/SearchPost";
 import OrderListBuyer from "./Components/Orders/BuyerOrder/OrderListBuyer";
+import Cart from "./Components/Cart/cart";
 
 const CART_LOCAL_STORAGE_KEY = "homey.cart";
 
@@ -75,7 +77,8 @@ function App() {
                     return state;
                 }
                 const update = [...state];
-                update[productIndex].quantity = action.quantity;
+                update[productIndex].quantityInCart = action.quantityInCart;
+                update[productIndex].quantityInStock = action.quantityInStock;
                 return update;
             }
             case "clean": {
@@ -95,8 +98,8 @@ function App() {
         setCart({ product, type: "remove" });
     }
 
-    function alterQuantity(product, quantity) {
-        setCart({ product, type: "chgQuantity", quantity: quantity });
+    function alterQuantity(product, quantityInCart, quantityInStock) {
+        setCart({ product, type: "chgQuantity", quantityInCart: quantityInCart, quantityInStock: quantityInStock });
     }
 
     function cleanUp() {
@@ -143,7 +146,23 @@ function App() {
                                 <Route
                                     exact
                                     path="/postdetail/:id"
-                                    component={PostDetail}
+                                    render= {(props) => 
+                                    <PostDetail 
+                                        id={props.match.params.id}
+                                        addToCart={add}
+                                        alterQuantity={alterQuantity}
+                                        cart={cart}/>}
+                                ></Route>
+                                <Route
+                                    exact
+                                    path="/cart"
+                                    render={() =>
+                                        <Cart
+                                            cart={cart}
+                                            alterQuantity={alterQuantity}
+                                            remove={remove}
+                                        />
+                                    }
                                 ></Route>
                                 <Route exact path="/OrderListSeller">
                                     <OrderListSeller />

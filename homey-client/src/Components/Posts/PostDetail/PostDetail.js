@@ -18,9 +18,9 @@ import axios from "axios";
 import "./PostDetail.css";
 
 function PostDetail(props) {
-    const { userName } = useContext(UserContext);
+    const { userName, type } = useContext(UserContext);
     const [product, setProduct] = useState({});
-    const productId = props.match.params.id;
+    const productId = props.id;
     const [image, setImage] = useState("");
     
     useEffect(async () => {
@@ -36,11 +36,34 @@ function PostDetail(props) {
 
 
     const handleSubmit = (event) => {
+        const quantity = parseInt(event.target[0].value);
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            quantity: data.get("quantity"),
-        });
+        const index = props.cart?.findIndex(item => item.id === product._id);
+        if (index >= 0) {
+            if(quantity > props.cart[index].quantityInStock) {
+                alert(`Error: Max quantity available: ${props.cart[index].quantityInStock}`);
+            }
+            else {
+                props.alterQuantity({id: product._id}, props.cart[index].quantityInCart + quantity, props.cart[index].quantityInStock - quantity);
+            }
+        } else {
+            if(quantity <= product.quantity) {
+                props.addToCart({
+                    id: product._id,
+                    userId: product.userId,
+                    name: product.name,
+                    unitPrice: product.unitPrice,
+                    category: product.category,
+                    image: product.images[0],
+                    quantityInStock: product.quantity - quantity,
+                    quantityInCart: quantity
+                });
+                alert(`The product is successfully added to your cart! Quantity: ${quantity}`);
+            } else {
+                alert(`No such quantity available in stock: ${quantity}`);
+            }
+        }
+
     };
     return (
         <div className="postdetail-container">
@@ -64,7 +87,7 @@ function PostDetail(props) {
                 <strong>Allergy Notice :</strong>
                 {product.allergies}
             </p>
-
+            {type === "Customer" ||
             <Box
                 component="form"
                 onSubmit={handleSubmit}
@@ -97,7 +120,7 @@ function PostDetail(props) {
                 >
                     Add to Cart
                 </Button>
-            </Box>
+            </Box>}
         </div>
     );
 }
