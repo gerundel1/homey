@@ -12,7 +12,7 @@ const getProductById = async (req, res) => {
     }
 }
 
-// Example of request url: http://localhost:8080/api/users/get_all?user=john.smith@example.com&category=baked&order=unitPrice&page=2
+// Example of request url: http://localhost:8080/api/products/get_all?user=john.smith@example.com&category=baked&order=unitPrice&page=2
 // Please note that pagination in this function starts from 0 (0 is 1 page)
 // Limit is a field that limits the number of records in the returned array
 // For sorting, you can pass 'desc' for descending and 'asc' for ascending (desc is default)

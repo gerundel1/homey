@@ -16,6 +16,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true})
 
 const userRouter = require('./routes/user.route');
 const productRouter = require('./routes/product.route');
+const orderRouter = require('./routes/order.route');
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
@@ -23,5 +24,6 @@ app.use(cors());
 
 app.use('/api', userRouter);
 app.use('/api', productRouter);
+app.use('/api', orderRouter);
 
 app.listen(HTTP_PORT, () => { console.log("Ready to handle requests on port " + HTTP_PORT) });

@@ -20,9 +20,27 @@ const orderSchema = new Schema ({
         required: true
     },
     paymentId: {
-        type: String,
-        required: true
-    }
+        type: String
+    },
+    orderItems: [{
+        productId: {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'product',
+            required: true
+        },
+        price: {
+            type: Number,
+            required: true
+        },
+        quantity: {
+            type: Number,
+            default: 1,
+        },
+        itemUnit: {
+            type: String,
+            required: true
+        }
+    }],
 }, { timestamps:true })
 
 const orderModel = mongoose.model('order', orderSchema);
