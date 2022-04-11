@@ -26,12 +26,10 @@ const userSchema = new Schema({
     },
     phone: {
         type: String,
-        required: true,
         max: 10
     },
     address: {
         type: String,
-        required: true,
         max: 60
     },
     cuisine: {

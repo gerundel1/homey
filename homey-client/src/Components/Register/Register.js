@@ -46,8 +46,7 @@ export default function Register() {
             cuisine: data.cuisine,
         };
 
-        axios
-            .post(`http://localhost:8080/api/users/create`, userData)
+        axios.post(`http://localhost:8080/api/users/create`, userData)
             .then((obj) => console.log(obj))
             .catch((err) => {
                 // You may display this error message in the UI

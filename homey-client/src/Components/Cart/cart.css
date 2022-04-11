@@ -12,9 +12,6 @@
 .modal-header {
     background-color: var(--main-bg-color);
 }
-.modal-footer {
-    background-color: rgb(230, 230, 230);
-}
 
 .checkout-btn.btn {
     width: 200px;
@@ -37,8 +34,12 @@
 }
 
 .footer {
-  display: grid;
-  font-size: 25px; 
+  font-size: 25px;
+  position: fixed;
+  justify-content: space-around;
+  width: 100%;
+  bottom: 0;
+  background-color: rgb(230, 230, 230);
 }
 
 .totalNum {
@@ -63,7 +64,6 @@
     justify-content: center;
     border: 2px solid rgb(200, 200, 200);
     border-radius: 13px;
-    margin-bottom: 3px;
     padding: 0px 0px;
     background-color: #dce5e2;
     box-shadow: 0 4px 13px rgb(211, 211, 211);

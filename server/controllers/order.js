@@ -16,7 +16,7 @@ const createOrder = async (req, res) => {
     }
 };
 
-// Example of request url: http://localhost:8080/api/orderss/get_all?user=john.smith@example.com&order=unitPrice&page=2
+// Example of request url: http://localhost:8080/api/orders/get_all?user=john.smith@example.com&order=unitPrice&page=2
 // Please note that pagination in this function starts from 0 (0 is 1 page)
 // Limit is a field that limits the number of records in the returned array
 // For sorting, you can pass 'desc' for descending and 'asc' for ascending (desc is default)

@@ -1,25 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import PropTypes from "prop-types";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-
-import MailIcon from "@mui/icons-material/Mail";
-import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import { flexbox } from "@mui/system";
 import { useHistory, useLocation } from "react-router-dom";
-import { ThemeContext } from "@emotion/react";
-import Nav from "../Nav/Nav";
+import { v4 as uuidv4 } from 'uuid';
 
 const drawerWidth = 240;
 
@@ -100,6 +88,7 @@ function Layout({ children }) {
                                     ? classes.active
                                     : null
                             }
+                            key={uuidv4()}
                         >
                             <ListItem
                                 key={item.text}

@@ -16,6 +16,7 @@ import OrderListSeller from "./Components/Orders/SellerOrder/OrderListSeller";
 import SearchPost from "./Components/Posts/SearchPost/SearchPost";
 import OrderListBuyer from "./Components/Orders/BuyerOrder/OrderListBuyer";
 import Cart from "./Components/Cart/cart";
+import Checkout from "./Components/Checkout/Checkout";
 
 const CART_LOCAL_STORAGE_KEY = "homey.cart";
 
@@ -117,8 +118,7 @@ function App() {
                 setUserType,
                 userEmail,
                 setUserEmail,
-            }}
-        >
+            }}>
             <Router>
                 <Nav />
                 <Switch>
@@ -160,6 +160,16 @@ function App() {
                                         <Cart
                                             cart={cart}
                                             alterQuantity={alterQuantity}
+                                            remove={remove}
+                                        />
+                                    }
+                                ></Route>
+                                <Route
+                                    exact
+                                    path="/checkout"
+                                    render={() =>
+                                        <Checkout
+                                            cart={cart}
                                             remove={remove}
                                         />
                                     }

@@ -8,17 +8,13 @@ import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserContext } from "../../../App";
 import axios from "axios";
 
 import "./PostDetail.css";
 
 function PostDetail(props) {
-    const { userName, type } = useContext(UserContext);
+    const { userName, type, userEmail } = useContext(UserContext);
     const [product, setProduct] = useState({});
     const productId = props.id;
     const [image, setImage] = useState("");

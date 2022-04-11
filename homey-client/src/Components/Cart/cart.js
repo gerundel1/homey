@@ -27,7 +27,7 @@ export default function Cart(props) {
     const total = cart.reduce((totalCost, item) => {
       return totalCost + item.unitPrice * item.quantityInCart;
     }, 0);
-    return total.toLocaleString(undefined, currencyOptions)
+    return total.toLocaleString(undefined, currencyOptions);
   }
 
   function calculateTax (cart) {
@@ -39,6 +39,13 @@ export default function Cart(props) {
     return finalTax.toLocaleString(undefined, currencyOptions);
   }
 
+  function getTotalItems (cart) {
+    const total = cart.reduce((totalQuantity, item) => {
+      return totalQuantity + item.quantityInCart;
+    }, 0);
+    return total;
+  }
+
   function getTotal(cart) {
     const subtotal = cart.reduce((totalCost, item) => {
       return totalCost + item.unitPrice * item.quantityInCart;
@@ -48,20 +55,6 @@ export default function Cart(props) {
     const total = subtotal + finalTax;
     totalPrice = total;
     return total.toLocaleString(undefined, currencyOptions)
-  }
-
-  const checkout = async () => {
-    props.cleanUp();
-    await axios.post(createOrderURL, {
-      products: products,
-      tax: finalTax,
-      total: totalPrice
-    },{
-      headers: {
-          'auth-token': localStorage.getItem("token"),
-      }
-      }).then((res) => {}
-    ).catch(err => console.log(err))
   }
 
     // if (props.cart?.length === 0 || !props.cart?.length) {
@@ -97,7 +90,7 @@ export default function Cart(props) {
                           </Row>
                         </Col>
                         <Col xs={2} className="price column">
-                            $ {item.unitPrice}
+                            $ {(item.unitPrice * item.quantityInCart).toLocaleString(undefined, currencyOptions)}
                         </Col>
                     </Row>)});
         return (
@@ -105,28 +98,32 @@ export default function Cart(props) {
                 <Container className='modal-header'>
                     <h1>Your Cart</h1>
                 </Container>
-                <Container className='modal-body'>
+                <Container style={{
+                  marginBottom: '200px'
+                }}>
                     {items}
                 </Container>
-                <Container className="footer modal-footer" fluid> 
-                  <Row>
-                    <div>
-                    Total Items: <span className="totalNum">{props.cart.length}</span>
-                    </div>
-                    <div>
-                      Subtotal: <span className="subPrice"> ${getSubTotal(props.cart)}</span>
-                    </div>
-                    <div>
-                      Tax: <span className="subPrice"> ${calculateTax(props.cart)}</span>
-                    </div>
-                    <div >
-                      Total After Tax: <span className="subPrice"> ${getTotal(props.cart)}</span>
-                    </div>
-                    <div className="checkout">
-                      <Link to={`/checkout`}><Button onClick={() => checkout()} className='checkout-btn' variant="dark">Checkout</Button></Link>
-                    </div>
+                  <Row className="footer modal-footer">
+                    <Col md={7}>
+                      <div>
+                      Total Items: <span className="totalNum">{getTotalItems(props.cart)}</span>
+                      </div>
+                      <div>
+                        Subtotal: <span className="subPrice"> ${getSubTotal(props.cart)}</span>
+                      </div>
+                      <div>
+                        Tax: <span className="subPrice"> ${calculateTax(props.cart)}</span>
+                      </div>
+                      <div >
+                        Total After Tax: <span className="subPrice"> ${getTotal(props.cart)}</span>
+                      </div>
+                    </Col>
+                    <Col md={4}>
+                      <div>
+                        <Link to={`/checkout`}><Button className='checkout-btn' variant="dark">Checkout</Button></Link>
+                      </div>
+                    </Col>
                   </Row>
-                </Container> 
             </>
           );
     // }
