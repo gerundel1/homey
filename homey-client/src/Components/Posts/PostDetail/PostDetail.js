@@ -81,6 +81,13 @@ function PostDetail(props) {
             }
         }
     };
+
+    const handleDelete = async (event) => {
+        await axios.delete(`http://localhost:8080/api/products/delete/${productId}`, {headers: {
+            'auth-token': localStorage.getItem("token")
+        }})
+        
+    };
     return (
         <div className="postdetail-container">
             <h1>{product.name}</h1>
@@ -163,6 +170,41 @@ function PostDetail(props) {
                     >
                         Add to Cart
                     </Button>
+                </Box>
+            )}
+            {type === "Seller" || (
+                <Box
+                component="form"
+                onSubmit={handleDelete}
+                noValidate
+                sx={{ mt: 1, display: "flex" }}
+                style={{
+                    display: "block",
+                }}
+            >
+                <TextField
+                    margin="normal"
+                    required
+                    id="quantity"
+                    label="Select Quantity"
+                    name="quantity"
+                    type="number"
+                    autoFocus
+                />
+                <Button
+                type="delete"
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                style={{
+                    borderRadius: 5,
+                    backgroundColor: "#FF0000",
+                    padding: "13px 36px",
+                    fontSize: "1em",
+                    display: "block",
+                }}
+            >
+                Delete
+                </Button>
                 </Box>
             )}
         </div>
