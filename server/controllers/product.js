@@ -1,4 +1,5 @@
 const ProductModel = require('../model/product.model');
+const UserModel = require('../model/user.model');
 const fs = require('fs');
 const path = require('path');
 
@@ -29,11 +30,11 @@ const getProductsByCriteria = async (req, res) => {
             criteria['category'] = category;
         }
         if(user) {
-            criteria['email'] = user;
+            const userInfo = await UserModel.findOne({email: user});
+            criteria['userId'] = userInfo._id;
         }
         let orderCondition = {};
         orderCondition[order] = sort;
-
         const products = await ProductModel.find(criteria).sort(orderCondition).skip(page * limit).limit(limit);
         res.status(200).json(products);
     } catch (err) {

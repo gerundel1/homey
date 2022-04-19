@@ -1,18 +1,19 @@
 const OrderModel = require('../model/order.model');
-
+const UserModel = require('../model/user.model');
 const createOrder = async (req, res) => {
-    if(req.body.order && req.body.orderItems) {
+    if(req.body.orderItems) {
         try {
+            const user = await UserModel.findById(req.body.sellerId);
             const newOrder = await OrderModel.create({
-                ...req.body.order,
-                orderItems: req.body.orderItems 
+                ...req.body,
+                sellerEmail: user.email
             });
             res.status(201).json(newOrder);
         } catch (e) {
-            res.status(400).json({error: e});          
+            res.status(400).json({error: e});
         }
     } else {
-        res.status(400).json('Cannot create an order: either order information or order items do not exist');
+        res.status(400).json('Cannot create an order: order items do not exist');
     }
 };
 
@@ -27,14 +28,23 @@ const getOrdersByCriteria = async (req, res) => {
         const page = req.query.page || 0;
         const limit = req.query.limit || 20;
         const user = req.query.user;
-
-        if(!user) {
-            res.status(400).json('User email must be provided');
-            return;
-        }
+        const seller = req.query.seller;
+        const startDate = req.query.sdate;
+        const endDate = req.query.edate;
 
         let criteria = {};
-        criteria['email'] = user;
+        if(user) {
+            criteria['userEmail'] = user;
+        }
+
+        if(seller) {
+            criteria['sellerEmail'] = seller;
+        }
+
+        if(startDate && endDate) {
+            console.log(startDate, endDate);
+            criteria['createdAt'] = {"$gte": startDate, "$lt": endDate};
+        }
 
         let orderCondition = {};
         orderCondition[orderBy] = sort;

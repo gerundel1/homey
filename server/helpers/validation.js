@@ -5,8 +5,8 @@ const registrationSchema = Joi.object({
     email: Joi.string().email({minDomainSegments: 2}).required(),
     password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
     type: Joi.string().required(),
-    phone: Joi.string().alphanum().max(10).required(),
-    address: Joi.string().max(60).required(),
+    phone: Joi.string().alphanum().max(10).allow(null, ''),
+    address: Joi.string().max(60).allow(null, ''),
     cuisine: Joi.string().max(25).allow(null, '')
 });
 

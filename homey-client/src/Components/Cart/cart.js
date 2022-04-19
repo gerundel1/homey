@@ -2,15 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './cart.css';
 import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
 import { Image, Row, Col, Button, Container } from 'react-bootstrap';
 
-
-
-const createOrderURL = "http://localhost:8080/api/orders/create";
-
 export default function Cart(props) {
-    console.log(props);
 
   let totalPrice = 0;
   let finalTax = 0;

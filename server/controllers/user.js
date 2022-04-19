@@ -12,13 +12,13 @@ function generateAccessToken(user){
 const createUser = async (req, res) => {
     // server site validation
     try {
-        const result = await registrationSchema.validateAsync(req.body);
+       await registrationSchema.validateAsync(req.body);
     } catch (err) {
         //this returns an array of errors; ref -> https://joi.dev/api/?v=17.6.0#errors
         res.status(400).json({errorsArray: err.details});
         return;
     }
-
+    console.log(req.body);
     // check if email is registered
     const foundUser = await UserModel.findOne({email: req.body.email});
     if(foundUser) {
@@ -31,8 +31,8 @@ const createUser = async (req, res) => {
             email: req.body.email,
             password: password,
             type: req.body.type,
-            phone: req.body.phone,
-            address: req.body.address,
+            phone: req.body?.phone,
+            address: req.body?.address,
             cuisine: req.body?.cuisine
         });
           res.status(201).json(newUser);
@@ -76,8 +76,15 @@ const loginUser = async (req, res) =>{
       }
 }
 
+const getUserEmail = async (req, res) => {
+  const id = req.params.id;
+  const user = await UserModel.findById(id);
+  res.status(200).json({email: user.email});
+}
+
 
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
+    getUserEmail
 }

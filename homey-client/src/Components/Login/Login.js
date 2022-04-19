@@ -21,7 +21,7 @@ const theme = createTheme();
 
 export default function Login() {
     const history = useHistory();
-    const { setUserName, setLoginStatus, setUserType, setUserEmail } =
+    const { setUserName, setLoginStatus, setUserType, setUserEmail, setUserId } =
         useContext(UserContext);
 
     const {
@@ -46,6 +46,7 @@ export default function Login() {
                 setUserEmail(res.data.user.email);
                 setUserType(res.data.user.type);
                 setLoginStatus(true);
+                setUserId(res.data.user._id);
                 console.log(res.data);
                 console.log(res.data.user.name);
             })

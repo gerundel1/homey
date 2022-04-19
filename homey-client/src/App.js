@@ -24,19 +24,21 @@ export const UserContext = createContext({});
 
 function App() {
     const loggedInUser = JSON.parse(localStorage.getItem("user"));
-    let initialState = { login: false, userName: "", type: "", email: "" };
+    let initialState = { login: false, userName: "", type: "", email: "", userId: "" };
 
     if (loggedInUser) {
         initialState.login = true;
         initialState.userName = loggedInUser.name;
         initialState.type = loggedInUser.type;
         initialState.email = loggedInUser.email;
+        initialState.userId = loggedInUser._id;
     }
 
     const [userName, setUserName] = useState(initialState.userName);
     const [userEmail, setUserEmail] = useState(initialState.email);
     const [loginStatus, setLoginStatus] = useState(initialState.login);
     const [userType, setUserType] = useState(initialState.type);
+    const [userId, setUserId] = useState(initialState.userId);
     const [cart, setCart] = useReducer(cartReducer, []);
 
     useEffect(() => {
@@ -118,6 +120,8 @@ function App() {
                 setUserType,
                 userEmail,
                 setUserEmail,
+                userId,
+                setUserId
             }}>
             <Router>
                 <Nav />
@@ -171,14 +175,12 @@ function App() {
                                         <Checkout
                                             cart={cart}
                                             remove={remove}
+                                            cleanUp={cleanUp}
                                         />
                                     }
                                 ></Route>
-                                <Route exact path="/OrderListSeller">
+                                <Route exact path="/orders">
                                     <OrderListSeller />
-                                </Route>
-                                <Route exact path="/OrderListBuyer">
-                                    <OrderListBuyer />
                                 </Route>
                                 <Route exact path="/searchpost">
                                     <SearchPost />

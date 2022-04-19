@@ -43,7 +43,7 @@ router.put(
 
 router.delete(
     '/products/delete/:id',
-    auth,
+    // auth,
     deleteProduct
 )
 

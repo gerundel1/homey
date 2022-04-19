@@ -1,18 +1,24 @@
-import React, { useEffect, useState } from "react";
-import Card from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { Grid } from "@mui/material";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Grid, Typography } from "@mui/material";
 import "./OrderListSeller.css";
 import axios from "axios";
+import { UserContext } from "../../../App";
+import { v4 as uuidv4 } from 'uuid';
 
-import { useTheme } from "@mui/material/styles";
+
+//table
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import CardMedia from "@mui/material/CardMedia";
+
 
 //  drop down list
-import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -22,13 +28,11 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import TimePicker from "@mui/lab/TimePicker";
-import DateTimePicker from "@mui/lab/DateTimePicker";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-import MobileDatePicker from "@mui/lab/MobileDatePicker";
-import Button from "@mui/material/Button";
 
 function OrderListSeller() {
+    const { userType, userEmail } = useContext(UserContext);
+
     //  drop down list
     const [sort, setSort] = React.useState("");
 
@@ -38,17 +42,72 @@ function OrderListSeller() {
     };
 
     // date picker
-    const [valueFrom, setValueFrom] = React.useState(new Date());
+    const yesterday = new Date();
+
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    yesterday.toISOString();
+    const [valueFrom, setValueFrom] = React.useState(yesterday);
 
     const handleChangePickerFrom = (newValue) => {
-        setValueFrom(newValue);
+        let date = new Date(newValue);
+        setValueFrom(date.toISOString());
     };
 
-    const [valueTo, setValueTo] = React.useState(new Date());
+    const [valueTo, setValueTo] = React.useState(new Date().toISOString());
 
     const handleChangePickerTo = (newValue) => {
-        setValueTo(newValue);
+        let date = new Date(newValue);
+        setValueTo(date.toISOString());
     };
+
+    const [orders, setOrders] = useState([]);
+
+    async function setProductImages(data) {
+        let temp = data;
+        for (let i = 0; i < temp.length; i++) {
+            for (let j = 0; j < temp[i].orderItems.length; j++) {
+                const product = await axios.get(`http://localhost:8080/api/product/${temp[i].orderItems[j].productId}`);
+                temp[i].orderItems[j] = {
+                    ...temp[i].orderItems[j],
+                    image: product.data.images[0]
+                }
+            }
+        }
+        return temp;
+    }
+
+    useEffect(() => {
+        const get_string = userType === "Business" ? 
+        `http://localhost:8080/api/orders/get_all?seller=${userEmail}&sort=${sort}&sdate=${valueFrom}&edate=${valueTo}` :
+        `http://localhost:8080/api/orders/get_all?user=${userEmail}&sort=${sort}&sdate=${valueFrom}&edate=${valueTo}`;
+        axios.get(get_string)
+        .then(async result => {
+            setOrders(await setProductImages(result.data));
+        })
+    }, [sort, valueFrom, valueTo]);
+
+    //table
+
+    const StyledTableCell = styled(TableCell)(({ theme }) => ({
+        [`&.${tableCellClasses.head}`]: {
+          backgroundColor: '#A2BAB4',
+          color: theme.palette.common.white,
+        },
+        [`&.${tableCellClasses.body}`]: {
+          fontSize: 14,
+        },
+      }));
+      
+      const StyledTableRow = styled(TableRow)(({ theme }) => ({
+        '&:nth-of-type(odd)': {
+          backgroundColor: theme.palette.action.hover,
+        },
+        // hide last border
+        '&:last-child td, &:last-child th': {
+          border: 0,
+        },
+      }));
 
     return (
         <div className="full-container">
@@ -66,8 +125,8 @@ function OrderListSeller() {
                                 label="Sort"
                                 onChange={handleChange}
                             >
-                                <MenuItem value={"newest"}>Newest</MenuItem>
-                                <MenuItem value={"oldest"}>Oldest</MenuItem>
+                                <MenuItem value={"desc"} defaultChecked>Newest</MenuItem>
+                                <MenuItem value={"asc"}>Oldest</MenuItem>
                             </Select>
                         </FormControl>{" "}
                     </Grid>
@@ -85,7 +144,7 @@ function OrderListSeller() {
                                     <TextField {...params} />
                                 )}
                             />
-                        </LocalizationProvider>{" "}
+                        </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DesktopDatePicker
                                 label="To"
@@ -96,82 +155,85 @@ function OrderListSeller() {
                                     <TextField {...params} />
                                 )}
                             />
-                        </LocalizationProvider>{" "}
-                        <Button
-                            variant="contained"
-                            style={{
-                                borderRadius: 5,
-                                backgroundColor: "#A3BAB4",
-                                padding: "13px 36px",
-                                fontSize: "1em",
-                                display: "block",
-                            }}
-                        >
-                            Apply
-                        </Button>
+                        </LocalizationProvider>
                     </Grid>
                 </Grid>
             </div>
-
-            <Grid container spacing={5} sx={{ flexDirection: "column" }}>
-                {/* single card start */}
-                <Grid item xs={3}>
-                    <Card sx={{ display: "flex", width: "fit-content" }}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                width: 300,
-                            }}
-                        >
-                            <CardContent sx={{ flex: "1 0 auto" }}>
-                                <Typography component="div" variant="h5">
-                                    Customer Detail:
-                                </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    color="text.secondary"
-                                    component="div"
-                                >
-                                    Customer name
-                                </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    color="text.secondary"
-                                    component="div"
-                                >
-                                    Customer email
-                                </Typography>
-                                &nbsp;
-                                <Typography component="div" variant="h5">
-                                    Product Detail:
-                                </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    color="text.secondary"
-                                    component="div"
-                                >
-                                    Product name
-                                </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    color="text.secondary"
-                                    component="div"
-                                >
-                                    Product quantity ordered
-                                </Typography>
-                            </CardContent>
-                        </Box>
-                        <CardMedia
-                            component="img"
-                            sx={{ width: 300, height: 250 }}
-                            image="https://source.unsplash.com/random"
-                            alt="Product image"
-                        />
-                    </Card>
-                </Grid>
-                {/* single card end */}
-            </Grid>
+            {orders.map((order) => (
+                <>
+                <TableContainer key={uuidv4()} component={Paper}>
+                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                    <TableHead>
+                    <TableRow>
+                        <StyledTableCell>
+                            <Typography variant="h5">
+                                { userType === "Business" ?
+                                `Customer - ${order.userEmail}` :
+                                `Seller - ${order.sellerEmail}`}
+                            </Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                            <Typography variant="h5">
+                                Price&nbsp;($)
+                            </Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                            <Typography variant="h5">
+                                Quantity
+                            </Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                            <Typography variant="h5">
+                                Image
+                            </Typography>
+                        </StyledTableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {order.orderItems.map((row) => (
+                        <StyledTableRow key={row.name}>
+                        <StyledTableCell component="th" scope="row">
+                            <Typography variant="h6">
+                                {row.name}
+                            </Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                            <Typography variant="h6">
+                                {row.price}
+                            </Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                            <Typography variant="h6">
+                                {row.quantity}
+                            </Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                            <CardMedia
+                                component="img"
+                                height="140"
+                                image={`http://localhost:8080/api/product/image/${row.image}`}
+                                alt="Product image"
+                            /></StyledTableCell>
+                        </StyledTableRow>
+                    ))}
+                    <TableRow>
+                        <TableCell >
+                            <Typography variant="h5">
+                               <strong>Total: ${order.total}</strong>
+                            </Typography>
+                        </TableCell>
+                        <TableCell>
+                            <Typography variant="h5">
+                               <strong>Date: {new Date(order.createdAt).toString().split(" ").slice(0, 5).join(" ")}</strong>
+                            </Typography>
+                        </TableCell>
+                    </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            &nbsp;
+            </>
+            ))}
         </div>
     );
 }

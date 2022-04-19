@@ -10,10 +10,11 @@ import { FaArrowAltCircleRight, FaArrowAltCircleLeft } from "react-icons/fa";
 import "./PostDetail.css";
 
 function PostDetail(props) {
-    const { userName, type } = useContext(UserContext);
+    const { userName, userType } = useContext(UserContext);
     const [product, setProduct] = useState({});
     const [images, setImages] = useState([]);
     const productId = props.id;
+    const [user, setUser] = useState("");
 
     // --------------
     // slider data
@@ -36,7 +37,9 @@ function PostDetail(props) {
         async function getProduct () {
             try{
             const data = await axios.get(`http://localhost:8080/api/product/${productId}`);
+            const user_data = await axios.get(`http://localhost:8080/api/user/${data.data.userId}`);
             setProduct(data.data);
+            setUser(user_data.data.email);
             setImages(data.data.images);
              }catch(err){
                     console.log(err);
@@ -81,13 +84,7 @@ function PostDetail(props) {
             }
         }
     };
-
-    const handleDelete = async (event) => {
-        await axios.delete(`http://localhost:8080/api/products/delete/${productId}`, {headers: {
-            'auth-token': localStorage.getItem("token")
-        }})
-        
-    };
+    
     return (
         <div className="postdetail-container">
             <h1>{product.name}</h1>
@@ -124,7 +121,7 @@ function PostDetail(props) {
             {/* slider end */}
 
             <p>
-                <strong>Sold By :</strong> {userName}
+                <strong>Sold By :</strong> {user}
             </p>
             <p>
                 <strong>Price :</strong> ${product.unitPrice} /{" "}
@@ -137,7 +134,7 @@ function PostDetail(props) {
                 <strong>Allergy Notice :</strong>
                 {product.allergies}
             </p>
-            {type === "Customer" || (
+            {userType === "Customer" && (
                 <Box
                     component="form"
                     onSubmit={handleSubmit}
@@ -172,39 +169,15 @@ function PostDetail(props) {
                     </Button>
                 </Box>
             )}
-            {type === "Seller" || (
+            {userType === "Business" && (
                 <Box
                 component="form"
-                onSubmit={handleDelete}
                 noValidate
                 sx={{ mt: 1, display: "flex" }}
                 style={{
                     display: "block",
                 }}
             >
-                <TextField
-                    margin="normal"
-                    required
-                    id="quantity"
-                    label="Select Quantity"
-                    name="quantity"
-                    type="number"
-                    autoFocus
-                />
-                <Button
-                type="delete"
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                style={{
-                    borderRadius: 5,
-                    backgroundColor: "#FF0000",
-                    padding: "13px 36px",
-                    fontSize: "1em",
-                    display: "block",
-                }}
-            >
-                Delete
-                </Button>
                 </Box>
             )}
         </div>

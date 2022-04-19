@@ -1,10 +1,16 @@
 import './Checkout.css';
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Image, Container, Button, Form } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Row, Col, Image, Form } from 'react-bootstrap';
+import { sha256 } from 'js-sha256';
+import { UserContext } from '../../App';
+import axios from 'axios';
 
 export default function Checkout(props) {
 
-    let totalPrice = 0;
+    const { userEmail } = useContext(UserContext);
+    
+
+    let totalPrice;
     let finalTax = 0;
   
     const tax = 0.13;
@@ -21,8 +27,39 @@ export default function Checkout(props) {
         finalTax = tax * subtotal;
         finalTax = Math.round((finalTax + Number.EPSILON) * 100) / 100;
         const total = subtotal + finalTax;
-        return total.toLocaleString(undefined, currencyOptions)
-      }
+        totalPrice = total.toLocaleString(undefined, currencyOptions);
+        return total.toLocaleString(undefined, currencyOptions);
+    }
+
+    async function onOrderSubmit(e) {
+        let key = "";
+        for (let i = 0; i < 4; i++) {
+            key.concat(" ", e.target[i].value);
+        }
+        const paymentId = sha256(key);
+
+        const products = props.cart.map(item => {
+            return ({
+                productId: item.id,
+                name: item.name,
+                price: item.unitPrice,
+                quantity: item.quantityInCart
+            });
+        });
+
+        axios.post('http://localhost:8080/api/order/create', {
+            userEmail: userEmail,
+            sellerId: props.cart[0].userId,
+            total: totalPrice,
+            paymentId: paymentId,
+            orderItems: products
+        }).catch((e) => {
+            alert(`There is a problem with your order: ${e}`);
+        });
+        props.cleanUp();
+        window.location.href = "http://localhost:3000/postlist";
+        alert("An order has successfully been placed");
+    }
 
     const items = props.cart.map(item => {
         return (
@@ -62,7 +99,7 @@ export default function Checkout(props) {
                         <h2>Payment Details:</h2>
                     </Row>
                     <Row>
-                        <Form>
+                        <Form id="submit-form" onSubmit={onOrderSubmit}>
                             <Form.Group className="mb-3">
                                 <Form.Label>CARDHOLDER</Form.Label>
                                 <Form.Control
@@ -119,7 +156,7 @@ export default function Checkout(props) {
                     <div className='cart-items-container'>
                         {items}
                     </div>
-                        <button className='btn-opt mt-4' type="submit" size='lg'>
+                        <button className='btn-opt mt-4' type="submit" form="submit-form" size='lg'>
                                         Place Order
                         </button>
                 </Col>

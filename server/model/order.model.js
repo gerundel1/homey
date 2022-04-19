@@ -3,24 +3,21 @@ const Schema = mongoose.Schema;
 
 const orderSchema = new Schema ({
 
-    userId: {
+    userEmail: {
         type: String,
         required: true
     },
-    subtotal: {
-        type: Number,
-        required: true
-    },
-    tax: {
-        type: Number,
+    sellerEmail: {
+        type: String,
         required: true
     },
     total: {
-        type: Number,
+        type: String,
         required: true
     },
     paymentId: {
-        type: String
+        type: String,
+        required: true
     },
     orderItems: [{
         productId: {
@@ -28,17 +25,17 @@ const orderSchema = new Schema ({
             ref: 'product',
             required: true
         },
+        name: {
+            type: String,
+            required: true
+        },
         price: {
-            type: Number,
+            type: String,
             required: true
         },
         quantity: {
             type: Number,
             default: 1,
-        },
-        itemUnit: {
-            type: String,
-            required: true
         }
     }],
 }, { timestamps:true })

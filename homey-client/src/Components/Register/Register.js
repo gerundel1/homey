@@ -47,27 +47,11 @@ export default function Register() {
         };
 
         axios.post(`http://localhost:8080/api/users/create`, userData)
-            .then((obj) => console.log(obj))
+            .then((obj) => history.push("/login"))
             .catch((err) => {
                 // You may display this error message in the UI
                 console.log(err);
             });
-        // add user to database
-
-        // axios({
-        //     url: "users/create",
-        //     method: "POST",
-        //     data: userData,
-        // })
-        //     .then(() => {
-        //         console.log("Data has been sent to the server");
-        //     })
-        //     .catch(() => {
-        //         console.log("Internal server error");
-        //     });
-
-        // Redirect to Congratulation page
-        history.push("/registersuccess");
     };
 
     console.log(errors);

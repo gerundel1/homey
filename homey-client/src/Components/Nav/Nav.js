@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useContext} from "react";
 import "./Nav.css";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../App";
 
 const Nav = () => {
+    const { userType } = useContext(UserContext);
     return (
         <div className="navbar-container">
             <nav id="navbar" className="">
@@ -13,9 +14,11 @@ const Nav = () => {
                         <a href="/">HOMEY</a>
                     </div>
                     <div>
+                        { userType === "Customer" &&
                         <Link to="/cart">
                             <ShoppingCartIcon />
                         </Link>
+                        } 
                     </div>
                 </div>
             </nav>

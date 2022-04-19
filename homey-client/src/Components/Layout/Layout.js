@@ -48,7 +48,7 @@ function Layout({ children }) {
         },
         {
             text: "ORDERS",
-            path: "/OrderListSeller",
+            path: "/orders",
         },
     ];
 

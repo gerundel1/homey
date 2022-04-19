@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
@@ -8,13 +8,26 @@ import { Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 import "./PostList.css";
 import axios from "axios";
+import { UserContext } from "../../../App";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 export default function PostList() {
     const [products, setProducts] = useState([]);
+    const { userType } = useContext(UserContext);
+
+    async function handleDelete(id) {
+        try {
+            await axios.delete(`http://localhost:8080/api/products/delete/${id}`);
+            alert("Product has been successfully deleted!");
+        } catch(e) {
+            alert(`Error: product has not been deleted: ${e}`);
+        }
+
+    }
 
     useEffect(async () => {
         await axios
-            .get("http://localhost:8080/api/products/get_all")
+            .get(`http://localhost:8080/api/products/get_all`)
             .then((result) => {
                 setProducts(result.data);
             })
@@ -51,6 +64,13 @@ export default function PostList() {
                             <Typography variant="body2" color="text.secondary">
                                 Quantity: {product.quantity}
                             </Typography>
+
+                            {userType === "Business" && <div className="d-flex" style={{
+                                justifyContent: 'right'
+                            }}>
+                                <button onClick={() => handleDelete(product._id)} style={{backgroundColor: 'inherit'}}><DeleteForeverIcon/></button>
+                            </div>}
+
                         </CardContent>
                     </CardActionArea>
                 </Card>
@@ -60,17 +80,13 @@ export default function PostList() {
 
     return (
         <div className="postlist-container">
+            { userType === "Business" &&
             <div className="btnadd">
                 <Link className="nav-link-newpost" to="/newpost">
                     +
                 </Link>
             </div>
-
-            {/* <SearchBar
-                value={this.state.value}
-                onChange={(newValue) => this.setState({ value: newValue })}
-                onRequestSearch={() => console.log("Hello")}
-            /> */}
+            }
             <Grid container spacing={5}>
                 {mappedProducts}
             </Grid>

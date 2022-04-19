@@ -13,6 +13,7 @@ import {
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import "./NewPost.css";
+import { UserContext } from "../../../App";
 //import UserContext from "../../App"
 
 const theme = createTheme(); // add details after
@@ -22,11 +23,10 @@ export default function NewPost() {
     const [imgErrMsg, setImgErrMsg] = useState(null);
     const [unit, setUnit] = useState(null);
     const [allergies, setAllergies] = useState(null);
+    const { userId } = useContext(UserContext);
 
     const history = useHistory();
 
-    //RESET TO USER ID THROUGH CONTEXT WHEN REGISTER OK
-    const [user_id] = useState("6216c85131782f7b17b57584");
     const {
         register,
         formState: { errors },
@@ -54,7 +54,7 @@ export default function NewPost() {
     const onSubmit = (data) => {
         if (imgErrMsg === null) {
             let postData = new FormData();
-            postData.append("userId", user_id);
+            postData.append("userId", userId);
             postData.append("name", data.itemName);
             postData.append("unitPrice", data.unitPrice);
             postData.append("pricePer", unit);

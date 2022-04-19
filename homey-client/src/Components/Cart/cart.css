@@ -1,6 +1,6 @@
 .cart-image {
     max-width: 15em;
-    height: auto;
+    max-height: 210px;
     border-radius: 13px;
 }
 
@@ -79,6 +79,7 @@
 }
 
 .column {
+    max-height: 210px;
     margin-top: 1em;
     margin-bottom: 1em;
 }
